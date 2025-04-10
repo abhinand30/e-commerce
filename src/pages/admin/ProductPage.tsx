@@ -2,12 +2,15 @@ import { useState } from "react";
 import { productFormArray, tableHeader } from "../../common/data/dataArray";
 import Modal from "../../components/Modal";
 import { productState } from "../../common/type/types";
-import { useDispatch } from "react-redux";
-import { addProduct } from "../../redux/slice/productSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addProduct, productSelected } from "../../redux/slice/productSlice";
 import { toast, ToastContainer } from "react-toastify";
 
 const ProductPage = () => {
   const dispatch=useDispatch();
+  const products=useSelector(productSelected);
+
+  console.log(products)
   const [showModal, setShowModal] = useState<boolean>(false);
   const [formData,setFormData]=useState<productState>({
     name:'',
@@ -22,11 +25,12 @@ const ProductPage = () => {
     setShowModal(!showModal)
   }
   
-  console.log(formData)
+
   const handleAddProduct:React.FormEventHandler<HTMLFormElement> = async (e) =>{
     e.preventDefault()
+    console.log('>>.')
     try{
-      dispatch(addProduct({id:1,
+      dispatch(addProduct({id:products.length+1,
         name:formData.name,
         price:formData.price,
       category:formData.category,
@@ -37,9 +41,9 @@ const ProductPage = () => {
     }catch(error){
       console.log(error)
     }
-    // finally{
-    //   setShowModal(!showModal)
-    // }
+    finally{
+      setShowModal(!showModal)
+    }
     }
       
 
@@ -59,12 +63,19 @@ const ProductPage = () => {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td className="border border-gray-300 w-50 ...">jjds</td>
-              <td className="border border-gray-300 ...">Indianapolis</td>
-              <td className="border border-gray-300 ...">Indiana</td>
-              <td className="border border-gray-300 ...">Indianapolis</td>
-            </tr>
+            {products.map((product)=>(
+               <tr key={product.id}>
+               <td className="border border-gray-300 w-50 h-10 ...">{product.id}</td>
+               <td className="border border-gray-300 ...">{product.name}</td>
+               <td className="border border-gray-300 ...">{product.price}</td>
+               <td className="border border-gray-300 ...">{product.stock}</td>
+               <td className="border border-gray-300 px-5 ...">
+                <button className="bg-[#3EB8DB] color-white-500 px-2 rounded-lg">delete</button>
+                <button>Edit</button>
+               </td>
+             </tr>
+            ))}
+           
 
           </tbody>
         </table>

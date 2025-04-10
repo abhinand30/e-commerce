@@ -15,7 +15,9 @@ interface productType{
     description:''
 }
 interface ModalProps{
-    modalButtons:{id: number; name: string; onClick: ()=>void; color: string}[];
+    // modalButtons:{id: number; name: string; ; color: string}[];
+    handleModal: ()=>void;
+    handleClick: ()=>void;
     productFormArray:{id:number,name:string,type:string,categories?:[]}[];
     setFormData:React.Dispatch<React.SetStateAction<productState>>;
     formData:productState;

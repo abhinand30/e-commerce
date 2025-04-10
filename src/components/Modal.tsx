@@ -66,6 +66,7 @@ const Modal:React.FC<ModalProps> = (props) => {
        
           <button
            type='submit'
+           onClick={handleClick}
             className="px-4 py-2 bg-black rounded text-white shadow-md hover:opacity-90 focus:ring-2 focus:ring-offset-2"
           >
             Add Product
