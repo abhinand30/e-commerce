@@ -11,8 +11,18 @@ const productFormArray=[
   {id:5,name:'category',type:'select',categories:['cloth','grocery']},
   {id:3,name:'stock',type:'number'},
   {id:4,name:'description',type:'textArea'},
-
+  {id:5,name:'image',type:'file'}
 ]
 
+const userFormArray=[
+  {id:1,name:'name',type:'text'},
+  {id:3,name:'phone',type:'number'},
+  {id:2,name:'email',type:'email'},
+  {id:4,name:'password',type:'password'}
+]
 
-  export {tableHeader,productFormArray}
+const loginData=[
+  {id:2,name:'email',type:'email'},
+  {id:4,name:'password',type:'password'}
+]
+  export {tableHeader,productFormArray,userFormArray,loginData}

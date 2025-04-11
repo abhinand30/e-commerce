@@ -3,23 +3,23 @@ import { productFormArray, tableHeader } from "../../common/data/dataArray";
 import Modal from "../../components/Modal";
 import { productState } from "../../common/type/types";
 import { useDispatch, useSelector } from "react-redux";
-import { addProduct, productSelected } from "../../redux/slice/productSlice";
+import { addProduct, deleteProduct, productSelected } from "../../redux/slice/productSlice";
 import { toast, ToastContainer } from "react-toastify";
 
 const ProductPage = () => {
   const dispatch=useDispatch();
   const products=useSelector(productSelected);
 
-  console.log(products)
   const [showModal, setShowModal] = useState<boolean>(false);
   const [formData,setFormData]=useState<productState>({
     name:'',
     price:null,
     category:'',
     stock:null,
-    description:''
+    description:'',
+    image:''
   })
-  
+    console.log(formData)
 
   const handleModal = () => {
     setShowModal(!showModal)
@@ -28,15 +28,24 @@ const ProductPage = () => {
 
   const handleAddProduct:React.FormEventHandler<HTMLFormElement> = async (e) =>{
     e.preventDefault()
-    console.log('>>.')
+
+    const isEmpty = Object.values(formData).some((value) => value === '');
+    if (isEmpty) {
+      toast.error("All fields are required!");
+      return;
+    }
     try{
-      dispatch(addProduct({id:products.length+1,
-        name:formData.name,
-        price:formData.price,
-      category:formData.category,
-      stock:formData.stock,
-      description:formData.description
-    }))
+      dispatch(
+        addProduct({
+          id: products.length + 1,
+          name: formData.name,
+          price: Number(formData.price),
+          category: formData.category,
+          stock: Number(formData.stock),
+          description: formData.description,
+          image:formData.image,
+        })
+      )
      toast("Product Successfully added");
     }catch(error){
       console.log(error)
@@ -46,45 +55,91 @@ const ProductPage = () => {
     }
     }
       
-
   
+  const handleDelete=(id:number)=>{
+    const confirmed=window.confirm('Are you Want Delete Product')
+    if(!confirmed){ return }
+    try{
+      dispatch(deleteProduct(id))
+    }catch(error){
+      console.log(error)
+    } 
+  }
   return (
-    <div>
-      <button className="bg-[#3EB8DB] color-white-500 p-2 m-5 rounded-lg" onClick={handleModal}>
-        + Add Product
-      </button>
-      <div>
-        <table className="table-auto border-collapse w-500 border-gray-400 m-5 ...">
+    <div className="p-6">
+      {/* Add Product Button */}
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
+          Product Management
+        </h2>
+        <button
+          className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition"
+          onClick={handleModal}
+        >
+          + Add Product
+        </button>
+      </div>
+
+      {/* Product Table */}
+      <div className="overflow-x-auto mt-6">
+        <table className="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
           <thead>
-            <tr>
+            <tr className="bg-gray-200 dark:bg-gray-700">
               {tableHeader.map((item) => (
-                <th className=" bg-gray border border-spacing-2 border-gray-300 border-spacing-y-[7px]..." key={item.id}>{item.name}</th>
+                <th
+                  key={item.id}
+                  className="px-4 py-3 text-left text-gray-600 dark:text-gray-300"
+                >
+                  {item.name}
+                </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {products.map((product)=>(
-               <tr key={product.id}>
-               <td className="border border-gray-300 w-50 h-10 ...">{product.id}</td>
-               <td className="border border-gray-300 ...">{product.name}</td>
-               <td className="border border-gray-300 ...">{product.price}</td>
-               <td className="border border-gray-300 ...">{product.stock}</td>
-               <td className="border border-gray-300 px-5 ...">
-                <button className="bg-[#3EB8DB] color-white-500 px-2 rounded-lg">delete</button>
-                <button>Edit</button>
-               </td>
-             </tr>
-            ))}
-           
-
+            {products.length > 0 ? (
+              products.map((product) => (
+                <tr
+                  key={product.id}
+                  className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <td className="px-4 py-3 text-white">{product.id}</td>
+                  <td className="px-4 py-3 text-white">{product.name}</td>
+                  <td className="px-4 py-3 text-white">{product.price}</td>
+                  <td className="px-4 py-3 text-white">{product.stock}</td>
+                  <td className="px-4 py-3 space-x-2">
+                    <button className="bg-red-500 text-white px-3 py-1 rounded-md shadow hover:bg-red-600 transition"
+                    onClick={()=>handleDelete(product.id)}>
+                      Delete
+                    </button>
+                    <button className="bg-gray-500 text-white px-3 py-1 rounded-md shadow hover:bg-gray-600 transition">
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={tableHeader.length + 1} className="px-4 py-3 text-center text-gray-500">
+                  No products available
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
-      {showModal &&
-        <div>
-          <Modal handleModal={handleModal} handleClick={handleAddProduct} productFormArray={productFormArray} formData={formData} setFormData={setFormData}/>
-        </div>}
-        <ToastContainer />
+
+      {/* Modal */}
+      {showModal && (
+        <Modal
+          handleModal={handleModal}
+          handleClick={handleAddProduct}
+          productFormArray={productFormArray}
+          formData={formData}
+          setFormData={setFormData}
+        />
+      )}
+
+      <ToastContainer />
     </div>
   )
 }

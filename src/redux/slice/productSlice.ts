@@ -20,14 +20,23 @@ const productsSlice= createSlice({
         price:payload.price,
         category:payload.category,
         stock:payload.stock,
-        description:payload.description
+        description:payload.description,
+        image:payload.image
       });
     },
-    
-   
+    editProduct: (state, action: PayloadAction<productType>) => {
+      const updatedProduct = action.payload;
+      const index = state.products.findIndex(product => product.id === updatedProduct.id);
+      if (index !== -1) {
+        state.products[index] = updatedProduct;
+      }
+    },    
+    deleteProduct: (state, action: PayloadAction<number>) => {
+      state.products = state.products.filter(product => product.id !== action.payload);
+    },
   },
 })
 
-export const { addProduct, } = productsSlice.actions;
+export const { addProduct,editProduct,deleteProduct } = productsSlice.actions;
 export const productSelected=(state:{products:productState})=>state.products.products;
 export default productsSlice.reducer
