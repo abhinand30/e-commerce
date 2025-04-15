@@ -1,52 +1,83 @@
 import React from 'react'
-
-import cartIcon from '../assets/cart.png'
-import { productProps } from '../common/type/types';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+
+import { productProps } from '../common/type/types';
 import { addCart, cartselected } from '../redux/slice/cartSlice';
+import { currentUser } from '../redux/slice/authSlice';
+
+
 
 
 const ProductCard:React.FC<productProps> = (props) => {
   const {product} =props;
-  const disptach=useDispatch();
-  const cartItems=useSelector(cartselected);
 
-  const handleAddCart=()=>{
-    try{
-      // disptach(addCart({id:cartItems.length+1,
-      //   productName: product.name,
-      //   price:Number(product.price),
-      //   quantity:1,
-      //   image:product.image,
-      //   // userId:userId
-      // }))
-    }catch(error){
-      console.log(error)
+  const cartItems=useSelector(cartselected);
+  const user=useSelector(currentUser);
+  
+  const dispatch=useDispatch();
+  const navigate=useNavigate();
+  
+  const handleAddCart = () => {
+    try {
+      // const existingItem = cartItems.find(
+      //   (item) => item.productId === product.id && item.userId === user?.id
+      // );
+  
+      // if (existingItem) {
+      //   toast.warning("Item already in cart");
+      //   return;
+      // }
+  
+      dispatch(
+        addCart({
+          id:cartItems.length+1,
+          productName: product.name,
+          productId: product.id,
+          price: Number(product.price),
+          quantity: 1,
+          image: product.image,
+          userId: user?.id,
+          userName: user?.name,
+        })
+      );
+      toast.success("Item added to cart");
+    } catch (error) {
+      console.error(error);
     }
+  };
+
+  const onNavigate=()=>{
+    navigate('cart')
   }
+
+  const isInCart = cartItems.some(
+    (item) => item.productId === product.id && item.userId === user?.id
+  );
+  
   return (
-    <div className="w-full relative group gap-1 border-[1px]  ">
-    <div className="w-80 max-h-80 relative overflow-y-hidden ">
-      <div>
-        <img className="w-60 h-50" src={product.image} />
-      </div>
+    <div className="bg-white rounded-2xl shadow-md overflow-hidden w-72   border border-gray-200">
       
-    </div>
-    <div className="max-w-80 py-6 flex flex-col px-4">
-      <div className="flex items-center justify-between font-titleFont">
-        <div>
-        <h2 className="text-lg text-primeColor font-bold">
-          {product.name}
-        </h2>
-        <p className="text-[#767676] text-[14px]">{product.price}</p>
-        </div>
-        <button onClick={handleAddCart} className='bg-color/Users/abhinandnarayanan/Downloads/cart.png'>
-        <img src={cartIcon}/>
-        </button>
-      </div>
-      
-    </div>
+  <div className="relative h-48 w-full overflow-hidden">
+    <img src={product.image} alt={product.name} className="h-auto w-full" />
   </div>
+  <div className="p-4 flex flex-col justify-between h-40">
+    <div>
+      <h3 className="text-lg font-semibold text-gray-800">{product.name}</h3>
+      <p className="text-gray-600 text-sm mt-1">₹ {product.price}</p>
+    </div>
+    <p className="text-gray-600 text-sm mt-1">Quantity:{product.stock}</p>
+    <button
+      onClick={isInCart ?onNavigate:handleAddCart}
+      className="mt-4 bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors"
+    >
+       {isInCart ? 'show Cart' : 'Add to Cart'}
+    
+    </button>
+  </div>
+</div>
+
   )
 }
 

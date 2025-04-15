@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 interface productState{
     id?:number;
     name:string,
@@ -11,16 +13,19 @@ interface productType{
     id:number;
     name:string,
     price:number|null,
-    category:'',
-    stock:number|null,
+    category:string,
+    stock:number,
     description:'',
     image:string
 }
+// interface productArrayTypes{
+//     productType[]
+// }
 interface ModalProps{
     // modalButtons:{id: number; name: string; ; color: string}[];
     handleModal: ()=>void;
-    handleClick: ()=>void;
-    productFormArray:{id:number,name:string,type:string,categories?:[]}[];
+    handleClick: React.FormEventHandler<HTMLFormElement>;
+    productFormArray:{id:number,name:string,type:string,categories?: string[]|undefined}[];
     setFormData:React.Dispatch<React.SetStateAction<productState>>;
     formData:productState;
 }
@@ -42,12 +47,38 @@ interface userType{
 interface cartState{
     id:number;
     productName:string,
+    productId:number,
     price:number,
     image:string;
     quantity:number
-    userId:string;
+    userId?:string;
+    userName?:string;
+}
+interface cartProps{
+    cart:cartState
+}
+interface cartStateProps{
+    carts:cartState[]
+    deliveryCharge:number;
+    totalPrice:number;
+    handleCheckOut:() => void
 }
 interface productProps{
     product:productType
 }
-export type{productState,ModalProps,productType,userType,userState,cartState,productProps}
+interface errorType {
+    [key: string]: string;
+
+}
+interface orderStates{
+    id:string;
+    products: {productId:number,productName:string;quantity:number;price:number;}[];
+    userId:string;
+    userName:string;
+    totalPrice:number
+}
+interface routeProps{
+    roles:string;
+    children: ReactNode
+}
+export type{orderStates,routeProps,productState,ModalProps,productType,userType,userState,cartState,productProps,errorType,cartProps,cartStateProps}

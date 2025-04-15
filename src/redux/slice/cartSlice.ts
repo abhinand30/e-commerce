@@ -16,11 +16,13 @@ const cartsSlice= createSlice({
         const payload=action.payload;
         state.carts.push({
         id: payload.id,
+        productId:payload.productId,
         productName: payload.productName,
         price:payload.price,
         quantity:payload.quantity,
         image:payload.image,
-        userId:payload.userId
+        userId:payload.userId,
+        userName:payload.userName,
       });
     },
     increaseQuantity: (state, action: PayloadAction<number>) => {
@@ -32,12 +34,12 @@ const cartsSlice= createSlice({
     },    
     decreaseQuantity: (state, action: PayloadAction<number>) => {
         const item = state.carts.find(Cart => Cart.id === action.payload);
-        if (item) {
+        if (item && item.quantity>1) {
           item.quantity-=1
         }
     },
     deleteCart: (state, action: PayloadAction<number>) => {
-        state.carts = state.carts.filter(cart => cart.id !== action.payload);
+        state.carts = []
       },
   },
 })

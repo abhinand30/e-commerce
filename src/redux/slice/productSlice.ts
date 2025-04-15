@@ -34,9 +34,16 @@ const productsSlice= createSlice({
     deleteProduct: (state, action: PayloadAction<number>) => {
       state.products = state.products.filter(product => product.id !== action.payload);
     },
+    editProductStock:(state,action:PayloadAction<{id:number;quantity:number}>)=>{
+      const editItem=action.payload
+      const item=state.products.find((product)=>product.id===editItem.id)
+      if(item&&item?.stock>=editItem.quantity){
+        item.stock-=editItem.quantity
+      }
+    }
   },
 })
 
-export const { addProduct,editProduct,deleteProduct } = productsSlice.actions;
+export const { addProduct,editProduct,deleteProduct,editProductStock } = productsSlice.actions;
 export const productSelected=(state:{products:productState})=>state.products.products;
 export default productsSlice.reducer

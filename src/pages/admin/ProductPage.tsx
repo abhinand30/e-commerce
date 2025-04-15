@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+
 import { productFormArray, tableHeader } from "../../common/data/dataArray";
 import Modal from "../../components/Modal";
 import { productState } from "../../common/type/types";
-import { useDispatch, useSelector } from "react-redux";
-import { addProduct, deleteProduct, productSelected } from "../../redux/slice/productSlice";
-import { toast, ToastContainer } from "react-toastify";
+import { addProduct, deleteProduct, editProduct, productSelected } from "../../redux/slice/productSlice";
+
 
 const ProductPage = () => {
   const dispatch=useDispatch();
@@ -19,11 +21,27 @@ const ProductPage = () => {
     description:'',
     image:''
   })
-    console.log(formData)
+  const [selectedProduct, setSelectedProduct] = useState<productState | null>(null);
+
+  const handleEdit = (product: productState) => {
+    setSelectedProduct(product);
+    setFormData(product);
+    setShowModal(true);
+  };
+  
 
   const handleModal = () => {
-    setShowModal(!showModal)
-  }
+    setShowModal(!showModal);
+    setSelectedProduct(null);
+    setFormData({
+      name: '',
+      price: null,
+      category: '',
+      stock: null,
+      description: '',
+      image: '',
+    });
+  };
   
 
   const handleAddProduct:React.FormEventHandler<HTMLFormElement> = async (e) =>{
@@ -35,6 +53,10 @@ const ProductPage = () => {
       return;
     }
     try{
+      if (selectedProduct?.id) {
+        dispatch(editProduct({ ...formData, id: selectedProduct.id }));
+        toast.success("Product successfully updated");
+      } else {
       dispatch(
         addProduct({
           id: products.length + 1,
@@ -46,8 +68,9 @@ const ProductPage = () => {
           image:formData.image,
         })
       )
-     toast("Product Successfully added");
-    }catch(error){
+     toast.success("Product Successfully added");
+    }
+  }catch(error){
       console.log(error)
     }
     finally{
@@ -100,7 +123,7 @@ const ProductPage = () => {
               products.map((product) => (
                 <tr
                   key={product.id}
-                  className="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="border-b bg-gray-900 hover:bg-black-100 dark:hover:bg-gray-700"
                 >
                   <td className="px-4 py-3 text-white">{product.id}</td>
                   <td className="px-4 py-3 text-white">{product.name}</td>
@@ -111,7 +134,7 @@ const ProductPage = () => {
                     onClick={()=>handleDelete(product.id)}>
                       Delete
                     </button>
-                    <button className="bg-gray-500 text-white px-3 py-1 rounded-md shadow hover:bg-gray-600 transition">
+                    <button onClick={()=>handleEdit(product)} className="bg-gray-500 text-white px-3 py-1 rounded-md shadow hover:bg-gray-600 transition">
                       Edit
                     </button>
                   </td>
@@ -130,13 +153,15 @@ const ProductPage = () => {
 
       {/* Modal */}
       {showModal && (
-        <Modal
-          handleModal={handleModal}
-          handleClick={handleAddProduct}
-          productFormArray={productFormArray}
-          formData={formData}
-          setFormData={setFormData}
-        />
+       <Modal
+       handleModal={handleModal}
+       handleClick={handleAddProduct}
+       productFormArray={productFormArray}
+       formData={formData}
+       setFormData={setFormData}
+      //  isEdit={!selectedProduct}
+     />
+     
       )}
 
       <ToastContainer />

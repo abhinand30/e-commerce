@@ -4,7 +4,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import { useDispatch } from 'react-redux';
 
 import { userFormArray } from '../common/data/dataArray';
-import { userState } from '../common/type/types';
+import { errorType, userState } from '../common/type/types';
 import { addUsers } from '../redux/slice/userSlice';
 
 
@@ -18,8 +18,8 @@ function SignUpPage() {
         phone: '',
         password: ''
     });
-    
-    const [errors,setErrors]=useState({})
+
+    const [errors,setErrors]=useState<errorType>({})
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
         const { name, value } = e.target;
@@ -35,7 +35,7 @@ function SignUpPage() {
     const newErrors:Record<string,string>={}
     const isValidEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
     Object.keys(formData).forEach((key)=>{
-        if(!formData[key].trim()){
+        if(!formData[key as keyof userState].trim()){
             newErrors[key]=`${key} is required`
             
         }
@@ -58,7 +58,7 @@ function SignUpPage() {
                 email: formData.email,
                 phone: Number(formData.phone),
                 password: formData.password,
-                userType:'admin'
+                userType:'user'
             }))
             toast('User registration successfull')
         } catch (error) {
@@ -82,7 +82,7 @@ function SignUpPage() {
                         {userFormArray.map((item, index) => (
                             <div key={index} className='py-1'>
                                 <p className='text-red-500 text-right'>{errors[item.name]}</p>
-                            <input key={index} type={item.type} name={item.name} value={formData[item.name]} onChange={handleChange} className="w-full h-12 text-gray-900 placeholder:text-gray-400 text-lg font-normal leading-7 rounded-lg border-gray-300 border shadow-sm focus:outline-none px-4 mb-1" placeholder={`Enter ${item.name}`} />
+                            <input key={index} type={item.type} name={item.name} value={formData[item.name as keyof userState]} onChange={handleChange} className="w-full h-12 text-gray-900 placeholder:text-gray-400 text-lg font-normal leading-7 rounded-lg border-gray-300 border shadow-sm focus:outline-none px-4 mb-1" placeholder={`Enter ${item.name}`} />
                             </div>))}
                         <button type='submit' className="w-full h-12 text-white text-center text-base font-semibold leading-6 rounded-full hover:bg-indigo-800 transition-all duration-700 bg-indigo-600 shadow-sm mb-11">Signup</button>
                         <Link to={'/'} className="flex justify-center text-gray-900 text-base font-medium leading-6"> Already have an account? <span className="text-indigo-600 font-semibold pl-3"> Login</span>

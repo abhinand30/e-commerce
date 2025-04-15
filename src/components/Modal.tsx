@@ -2,6 +2,7 @@ import React from 'react'
 import { ModalProps } from '../common/type/types';
 
 
+
 const Modal: React.FC<ModalProps> = (props) => {
   const { productFormArray, setFormData, formData, handleClick, handleModal } = props
 
