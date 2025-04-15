@@ -35,4 +35,8 @@ const usersTableHeader=[{id:1,name:'name'},
   {id:3,name:'phone'},
   // {id:4,name:'Action'}
 ]
-  export {tableHeader,productFormArray,userFormArray,loginData,orderTableHeader,usersTableHeader}
+const forgotPasswordData=[
+  {id:1,name:'email',type:'email'},
+  {id:2,name:'password',type:'password'}
+]
+  export {tableHeader,forgotPasswordData,productFormArray,userFormArray,loginData,orderTableHeader,usersTableHeader}

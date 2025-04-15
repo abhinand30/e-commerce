@@ -35,10 +35,17 @@ const userSlice=createSlice({
         deleteUser: (state, action: PayloadAction<string>) => {
             state.users = state.users.filter(user => user.id !== action.payload);
           },
+        changePassword:(state,action:PayloadAction<{email:string;password:string}>)=>{
+            const updatedData=action.payload
+            const userData=state.users.find((user)=>user.email===updatedData.email)
+            if(userData){
+                userData.password=updatedData.password
+            }
+        }
     }
 });
 
-export const {addUsers,editUser,deleteUser}=userSlice.actions;
+export const {addUsers,editUser,deleteUser,changePassword}=userSlice.actions;
 
 export const selectedUsers=(state:{users:userState})=>state.users.users;
 export default userSlice.reducer

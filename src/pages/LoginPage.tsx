@@ -6,12 +6,9 @@ import { toast, ToastContainer } from "react-toastify";
 import { selectedUsers } from "../redux/slice/userSlice";
 import { loginData } from "../common/data/dataArray";
 import { loginSuccess } from "../redux/slice/authSlice";
-import { errorType } from "../common/type/types";
+import { errorType, formType } from "../common/type/types";
 
-interface formType {
-    email: string;
-    password: string
-}
+
 
 const LoginPage = () => {
     const userData = useSelector(selectedUsers);
@@ -120,9 +117,9 @@ const LoginPage = () => {
                             </div>
                         ))}
 
-                        <a className="flex justify-end mb-6">
+                        <Link to={'/forgotPassword'} className="flex justify-end mb-6">
                             <span className="text-indigo-600 text-right text-base font-normal leading-6">Forgot Password?</span>
-                        </a>
+                        </Link>
                         <button type="submit" className="w-full h-12 text-white text-center text-base font-semibold leading-6 rounded-full hover:bg-indigo-800 transition-all duration-700 bg-indigo-600 shadow-sm mb-11">Login</button>
                         <Link to={'/signup'} className="flex justify-center text-gray-900 text-base font-medium leading-6"> Don’t have an account? <span className="text-indigo-600 font-semibold pl-3"> Sign Up</span>
                         </Link>

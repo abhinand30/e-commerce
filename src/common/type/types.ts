@@ -81,4 +81,8 @@ interface routeProps{
     roles:string;
     children: ReactNode
 }
-export type{orderStates,routeProps,productState,ModalProps,productType,userType,userState,cartState,productProps,errorType,cartProps,cartStateProps}
+interface formType {
+    email: string;
+    password: string
+}
+export type{formType,orderStates,routeProps,productState,ModalProps,productType,userType,userState,cartState,productProps,errorType,cartProps,cartStateProps}

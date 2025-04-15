@@ -9,6 +9,7 @@ import CartPage from "./pages/user/CartPage"
 import ProtectedRoute from "./route/ProtectedRoute"
 import UsersPage from "./pages/admin/UsersPage"
 import OrderListPage from "./pages/admin/OrderListPage"
+import ForgotPassword from "./pages/ForgotPassword"
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Routes>
       <Route path='/' element={<LoginPage/>} />
       <Route path='/signup' element={<SignUpPage/>} />
+      <Route path='/forgotPassword' element={<ForgotPassword/>} />
 
       {/* admin */}
          <Route path='/admin' element={<ProtectedRoute roles={'admin'}><AdminHome/></ProtectedRoute>} />

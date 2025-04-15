@@ -19,6 +19,7 @@ function Header() {
     localStorage.removeItem("loginDetails");
     navigate("/");
   };
+ 
 
   return (
     <nav className="flex items-center justify-between shadow-md px-6 py-4 bg-white">
@@ -51,6 +52,13 @@ function Header() {
                   onClick={() => setDropdownOpen(false)}
                 >
                   Profile
+                </Link>
+                <Link
+                  to="wishlist"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                  onClick={() => setDropdownOpen(false)}
+                >
+                  WhishList
                 </Link>
                 <button
                   onClick={handleLogout}
