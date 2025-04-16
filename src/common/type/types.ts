@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import React, { ReactNode } from "react";
 
 interface productState{
     id?:number;
@@ -13,10 +13,11 @@ interface productType{
     id:number;
     name:string,
     price:number|null,
-    category:string,
+    category:'',
     stock:number,
     description:'',
-    image:string
+    image:string;
+    selected?:boolean;
 }
 // interface productArrayTypes{
 //     productType[]
@@ -64,7 +65,19 @@ interface cartStateProps{
     handleCheckOut:() => void
 }
 interface productProps{
-    product:productType
+    product:{
+        id:number;
+        name:string,
+        price:number|null,
+        category?:string,
+        stock?:number,
+        description?:'',
+        image:string;
+        selected?:boolean;
+    }
+}
+interface favoriteProps{
+    product:favoriteItem
 }
 interface errorType {
     [key: string]: string;
@@ -85,4 +98,33 @@ interface formType {
     email: string;
     password: string
 }
-export type{formType,orderStates,routeProps,productState,ModalProps,productType,userType,userState,cartState,productProps,errorType,cartProps,cartStateProps}
+interface forgotPasswordFormType {
+    email: string;
+    password: string;
+    confirmPassword:string;
+}
+interface favoriteItem{
+    id:number;
+    productName:string,
+    productId:number,
+    price:number|null,
+    image:string;
+    userId?:string;
+    userName?:string;
+}
+interface orderDetailProps{
+  handleModal:() => void;
+  order:orderStates|undefined
+}
+
+interface column<T>{
+    id:number;
+    selector?:string;
+    title:string;
+    cell?:(arg: T) => React.ReactNode
+}
+interface commonTableProps{
+    header:column<T>[];
+    data:productType[]|userType[]|orderStates[]
+}
+export type{column,commonTableProps,favoriteProps,orderDetailProps,favoriteItem,forgotPasswordFormType,formType,orderStates,routeProps,productState,ModalProps,productType,userType,userState,cartState,productProps,errorType,cartProps,cartStateProps}

@@ -1,12 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+
 import cartIcon from '../assets/cart.png';
 import {  userType } from "../common/type/types";
 
 function Header() {
+
+  const navigate = useNavigate();
+
   const [userData, setUserData] = useState<userType>();
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const savedData = JSON.parse(localStorage.getItem("loginDetails") as string);
@@ -19,7 +22,8 @@ function Header() {
     localStorage.removeItem("loginDetails");
     navigate("/");
   };
- 
+  
+
 
   return (
     <nav className="flex items-center justify-between shadow-md px-6 py-4 bg-white">
@@ -29,7 +33,7 @@ function Header() {
 
       <div className="flex items-center space-x-4 relative">
         {userData?.userType==='user'&&(
-           <Link to="cart">
+           <Link to="/user/cart">
            <img src={cartIcon} alt="cart" className="w-8" />
          </Link>
         )}
@@ -53,13 +57,15 @@ function Header() {
                 >
                   Profile
                 </Link>
+                {userData?.userType==='user'&&(
                 <Link
-                  to="wishlist"
+                  to="/user/wishlist"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                   onClick={() => setDropdownOpen(false)}
                 >
-                  WhishList
+                  WishList
                 </Link>
+                )}
                 <button
                   onClick={handleLogout}
                   className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"

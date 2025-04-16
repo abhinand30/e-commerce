@@ -28,15 +28,6 @@ const OrderSummary:React.FC<cartStateProps> = (props) => {
                 ))}
                   
                    
-                           
-                        {/* <div className="flex items-center justify-between py-8">
-                            <p className="font-medium text-xl leading-8 text-black">Delivery Charge</p>
-                            <p className="font-semibold text-xl leading-8 text-indigo-600">10</p>
-                        </div>
-                        <div className="flex items-center justify-between py-8">
-                            <p className="font-medium text-xl leading-8 text-black">Total</p>
-                            <p className="font-semibold text-xl leading-8 text-indigo-600">{carts.price+10}</p>
-                        </div> */}
                         <button onClick={handleCheckOut} className="w-full text-center bg-indigo-600 rounded-xl py-3 px-6 font-semibold text-lg text-white transition-all duration-500 hover:bg-indigo-700">
                             Checkout
                         </button>

@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
 import {  userType } from "../../common/type/types";
 
 
@@ -20,7 +21,7 @@ const authSlice = createSlice({
 });
 
 export const { loginSuccess, logout } = authSlice.actions;
-// export const currentUser=(state:{auth:userType})=>state.auth;
-export const currentUser = (state: { auth: { currentUser: userType | null } }) => state.auth.currentUser;
+
+export const currentUser = (state: { auth: { currentUser: userType  } }) => state.auth.currentUser;
 
 export default authSlice.reducer;

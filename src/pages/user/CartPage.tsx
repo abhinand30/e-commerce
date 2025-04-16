@@ -50,6 +50,7 @@ const CartPage = () => {
             const isStockValid = handleCheckStock();
             console.log(isStockValid)
             if(isStockValid){
+                alert('Order successfully Placed')
                 console.log('>>>')
                 cartItems.forEach(cart=>{
                     dispatch(editProductStock({
@@ -64,8 +65,9 @@ const CartPage = () => {
                     userName:userData?.name,
                     totalPrice:totalPrice+deliveryCharge
                 }))
+               
                 cartItems.forEach((cart)=>{dispatch(deleteCart(cart.id))})
-                toast.success('Order successfully Placed')
+               
             }
             else{
                 toast.warning('item is out of stock')
@@ -82,6 +84,13 @@ const CartPage = () => {
 
   return (
     <div className=" relative z-10 after:contents-[''] after:absolute after:z-0 after:h-full xl:after:w-1/3 after:top-0 after:right-0 after:bg-gray-50">
+          <ToastContainer/>
+         <div className="m-10">
+        
+        <h2 className="text-2xl font-semibold mb-6">Carts</h2>
+        {cartItems.length === 0 ? (
+          <p className="text-gray-600">Your Carts is empty.</p>
+        ) : (
     <div className="w-full max-w-7xl px-4 md:px-5 lg-6 mx-auto relative z-10">
         <div className="grid grid-cols-12">
             <div
@@ -104,19 +113,18 @@ const CartPage = () => {
                             </div>
                         </div>
                     </div>
-                </div>
-                
-             
+                </div> 
             {cartItems.map((cart,index)=>(
                  <Carts key={index} cart={cart} />
             ))}
             </div>
-
             <OrderSummary carts={cartItems} deliveryCharge={deliveryCharge} totalPrice={totalPrice} handleCheckOut={handleCheckOut}/>
-            
         </div>
     </div>
-    <ToastContainer/>
+        )}
+    </div>
+
+    
 </div>
                                         
   )

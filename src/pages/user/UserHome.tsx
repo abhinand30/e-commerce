@@ -5,22 +5,26 @@ import Header from '../../components/Header';
 import { productSelected } from '../../redux/slice/productSlice';
 import { ToastContainer } from 'react-toastify';
 import { useEffect, useState } from 'react';
+import { selectedFavorites } from '../../redux/slice/favoriteSlice';
+import {  productType } from '../../common/type/types';
 
 
 
 const UserHome = () => {
   const products = useSelector(productSelected);
+  const favoriteData=useSelector(selectedFavorites);
+  const [productArray,setProductArray]=useState<productType[]>([]);
 
-  const [productArray,setProductArray]=useState([]);
-  
+
   useEffect(()=>{
-    const filteredProduct=products.filter((product)=>{
-      if(product.stock){
-        return product.stock>0;
-      }
-    });
+    const filteredProduct:productType[] = products
+    .filter((product) => product.stock > 0)
+    .map((product) => ({
+      ...product,
+      selected: favoriteData.some((favorite) => favorite.productId === product.id),
+    }));
     setProductArray(filteredProduct)
-}, [products])
+}, [products,favoriteData])
   
 
 

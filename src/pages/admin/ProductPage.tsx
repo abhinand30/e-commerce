@@ -2,25 +2,27 @@ import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
 
-import { productFormArray, tableHeader } from "../../common/data/dataArray";
+import { productFormArray } from "../../common/data/dataArray";
 import Modal from "../../components/Modal";
-import { productState } from "../../common/type/types";
+import { productState, productType } from "../../common/type/types";
 import { addProduct, deleteProduct, editProduct, productSelected } from "../../redux/slice/productSlice";
+import CommonTable from "../../components/CommonTable";
 
 
 const ProductPage = () => {
-  const dispatch=useDispatch();
-  const products=useSelector(productSelected);
+  const dispatch = useDispatch();
+  const products = useSelector(productSelected);
 
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [formData,setFormData]=useState<productState>({
-    name:'',
-    price:null,
-    category:'',
-    stock:null,
-    description:'',
-    image:''
+  const [formData, setFormData] = useState<productState>({
+    name: '',
+    price: null,
+    category: '',
+    stock: null,
+    description: '',
+    image: ''
   })
+
   const [selectedProduct, setSelectedProduct] = useState<productState | null>(null);
 
   const handleEdit = (product: productState) => {
@@ -28,7 +30,7 @@ const ProductPage = () => {
     setFormData(product);
     setShowModal(true);
   };
-  
+
 
   const handleModal = () => {
     setShowModal(!showModal);
@@ -42,9 +44,9 @@ const ProductPage = () => {
       image: '',
     });
   };
-  
 
-  const handleAddProduct:React.FormEventHandler<HTMLFormElement> = async (e) =>{
+
+  const handleAddProduct: React.FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault()
 
     const isEmpty = Object.values(formData).some((value) => value === '');
@@ -52,42 +54,66 @@ const ProductPage = () => {
       toast.error("All fields are required!");
       return;
     }
-    try{
+    try {
       if (selectedProduct?.id) {
-        dispatch(editProduct({ ...formData, id: selectedProduct.id }));
-        toast.success("Product successfully updated");
-      } else {
-      dispatch(
-        addProduct({
-          id: products.length + 1,
+        dispatch(editProduct({
           name: formData.name,
           price: Number(formData.price),
           category: formData.category,
           stock: Number(formData.stock),
           description: formData.description,
-          image:formData.image,
-        })
-      )
-     toast.success("Product Successfully added");
-    }
-  }catch(error){
+          image: formData.image, id: selectedProduct?.id
+        }));
+        toast.success("Product successfully updated");
+      } else {
+        dispatch(
+          addProduct({
+            id: products.length + 1,
+            name: formData.name,
+            price: Number(formData.price),
+            category: formData.category,
+            stock: Number(formData.stock),
+            description: formData.description,
+            image: formData.image,
+          })
+        )
+        toast.success("Product Successfully added");
+      }
+    } catch (error) {
       console.log(error)
     }
-    finally{
+    finally {
       setShowModal(!showModal)
     }
-    }
-      
-  
-  const handleDelete=(id:number)=>{
-    const confirmed=window.confirm('Are you Want Delete Product')
-    if(!confirmed){ return }
-    try{
-      dispatch(deleteProduct(id))
-    }catch(error){
-      console.log(error)
-    } 
   }
+
+
+  const handleDelete = (id: number) => {
+    const confirmed = window.confirm('Are you Want Delete Product')
+    if (!confirmed) { return }
+    try {
+      dispatch(deleteProduct(id))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const tableHeader = [
+    { id: 1, selector: 'id', title: 'Product Id' },
+    { id: 2, selector: 'name', title: 'Product Name' },
+    { id: 3, selector: 'price', title: 'Price' },
+    { id: 4, selector: 'stock', title: 'Stock' },
+    {
+      id: 5, cell: (row: productType) => <div className="flex gap-10"> <button className="bg-red-500 text-white px-3 py-1 rounded-md shadow hover:bg-red-600 transition"
+        onClick={() => handleDelete(row.id)}>
+        Delete
+      </button>
+        <button onClick={() => handleEdit(row)} className="bg-gray-500 text-white px-3 py-1 rounded-md shadow hover:bg-gray-600 transition">
+          Edit
+        </button></div>, title: 'Action'
+    }
+  ]
+
   return (
     <div className="p-6">
       {/* Add Product Button */}
@@ -103,65 +129,22 @@ const ProductPage = () => {
         </button>
       </div>
 
-      {/* Product Table */}
       <div className="overflow-x-auto mt-6">
-        <table className="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
-          <thead>
-            <tr className="bg-gray-200 dark:bg-gray-700">
-              {tableHeader.map((item) => (
-                <th
-                  key={item.id}
-                  className="px-4 py-3 text-left text-gray-600 dark:text-gray-300"
-                >
-                  {item.name}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {products.length > 0 ? (
-              products.map((product) => (
-                <tr
-                  key={product.id}
-                  className="border-b bg-gray-900 hover:bg-black-100 dark:hover:bg-gray-700"
-                >
-                  <td className="px-4 py-3 text-white">{product.id}</td>
-                  <td className="px-4 py-3 text-white">{product.name}</td>
-                  <td className="px-4 py-3 text-white">{product.price}</td>
-                  <td className="px-4 py-3 text-white">{product.stock}</td>
-                  <td className="px-4 py-3 space-x-2">
-                    <button className="bg-red-500 text-white px-3 py-1 rounded-md shadow hover:bg-red-600 transition"
-                    onClick={()=>handleDelete(product.id)}>
-                      Delete
-                    </button>
-                    <button onClick={()=>handleEdit(product)} className="bg-gray-500 text-white px-3 py-1 rounded-md shadow hover:bg-gray-600 transition">
-                      Edit
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={tableHeader.length + 1} className="px-4 py-3 text-center text-gray-500">
-                  No products available
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+
+        <CommonTable data={products} header={tableHeader} />
       </div>
 
       {/* Modal */}
       {showModal && (
-       <Modal
-       handleModal={handleModal}
-       handleClick={handleAddProduct}
-       productFormArray={productFormArray}
-       formData={formData}
-       setFormData={setFormData}
-      //  isEdit={!selectedProduct}
-     />
-     
+        <Modal
+          handleModal={handleModal}
+          handleClick={handleAddProduct}
+          productFormArray={productFormArray}
+          formData={formData}
+          setFormData={setFormData}
+
+        />
+
       )}
 
       <ToastContainer />

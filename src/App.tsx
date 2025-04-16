@@ -10,6 +10,7 @@ import ProtectedRoute from "./route/ProtectedRoute"
 import UsersPage from "./pages/admin/UsersPage"
 import OrderListPage from "./pages/admin/OrderListPage"
 import ForgotPassword from "./pages/ForgotPassword"
+import Wishlist from "./pages/user/WishList"
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
       {/* user */}
       <Route path='/user'element={<ProtectedRoute roles={'user'}><UserHome/></ProtectedRoute>} />
       <Route path="/user/cart"element={<ProtectedRoute roles={'user'}><CartPage/></ProtectedRoute>}/>
+      <Route path="/user/wishlist"element={<ProtectedRoute roles={'user'}><Wishlist/></ProtectedRoute>}/>
      
        </Routes>
   

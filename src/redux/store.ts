@@ -1,12 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
+import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'
+
 import productsSlice from './slice/productSlice';
 import authReducer from "./slice/authSlice";
 import userSlice from './slice/userSlice';
 import cartSlice from './slice/cartSlice';
 import orderSlice from './slice/orderSlice'
-import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist';
-
-import storage from 'redux-persist/lib/storage'
+import favoriteSlice from './slice/favoriteSlice'
 
 const productPersistConfig = {
   key: 'products',
@@ -36,6 +37,7 @@ export const store = configureStore({
     products: persistedProductReducer,
     users:persistedUserReducer,
     auth: authReducer,
+    favorite:favoriteSlice,
     carts:persistedCartReducer,
     orders:persistedorderReducer,
   },

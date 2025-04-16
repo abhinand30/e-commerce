@@ -10,7 +10,6 @@ const ProtectedRoute:React.FC<routeProps>=(props)=>{
 if (!currentLoginUser) {
   return <Navigate to="/" replace />;
 }
-
 return children;
 
 }

@@ -6,8 +6,9 @@ import { cartProps } from "../common/type/types";
 
 const Carts: React.FC<cartProps> = (props) => {
     const { cart } = props;
-    console.log(cart)
+
     const dispatch = useDispatch();
+    
     const handleIncrease = () => {
         try {
             dispatch(increaseQuantity(cart.id))
